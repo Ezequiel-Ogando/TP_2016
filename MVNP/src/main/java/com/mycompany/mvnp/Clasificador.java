@@ -57,26 +57,60 @@ public class Clasificador {
         JSONObject imagen = ar_imagen.getJSONObject(0);
         JSONArray arr_caras = imagen.getJSONArray("faces");
         
-        for (int i = 0; i< arr_caras.length(); i++){
-            String genero = arr_caras.getJSONObject(i).getJSONObject("gender").getString("gender");
-            int limite_sup = arr_caras.getJSONObject(i).getJSONObject("age").getInt("max");
-            int limite_inf = arr_caras.getJSONObject(i).getJSONObject("age").getInt("min");
+        int cant_cambios = 0;
+        int minimo_global=0;
+        int maximo_global=200;
+        int max_cambio = -1;
+        int sw;
+        for (int j = 0; j< arr_caras.length(); j++){
             
-            if (genero.charAt(0) == predominante)
-            {
-                System.out.println(genero + "( " + limite_inf + ", " + limite_sup + " )");
+             String genero = arr_caras.getJSONObject(j).getJSONObject("gender").getString("gender");
+             if (genero.charAt(0) == predominante)
+             {
+             
+                rango.set_superior( arr_caras.getJSONObject(j).getJSONObject("age").getInt("max"));
+                rango.set_inferior(arr_caras.getJSONObject(j).getJSONObject("age").getInt("min"));
+                cant_cambios=0;
+                System.out.println(genero + "( " + rango.get_inferior() + ", " + rango.get_superior() + " )");
                 
-                if ( ( limite_inf   > rango.get_inferior() ) && ( limite_inf <  rango.get_superior() )  )
-                    rango.set_inferior( limite_inf );
+                for (int i = 0 ; i< arr_caras.length(); i++){
                 
-                if ( ( limite_sup   < rango.get_superior() ) && ( limite_sup >  rango.get_inferior() ) )
-                    rango.set_superior( limite_sup );
+                    genero = arr_caras.getJSONObject(i).getJSONObject("gender").getString("gender");
+                    int limite_sup = arr_caras.getJSONObject(i).getJSONObject("age").getInt("max");
+                    int limite_inf = arr_caras.getJSONObject(i).getJSONObject("age").getInt("min");
+            
+                    sw = 0;
+                    if (genero.charAt(0) == predominante)
+                    {
+                       // System.out.println(genero + "( " + limite_inf + ", " + limite_sup + " )");
+                
+                        if ( ( limite_inf   > rango.get_inferior() ) && ( limite_inf <  rango.get_superior() )  )
+                        {
+                            rango.set_inferior( limite_inf );
+                            sw=1;
+                        }
+                
+                        if ( ( limite_sup   < rango.get_superior() ) && ( limite_sup >  rango.get_inferior() ) )
+                        {
+                            rango.set_superior( limite_sup );
+                            sw=1;
+                        }
+                        if (sw != 0)
+                            cant_cambios++;
               
-                System.out.println(genero + "( " + limite_inf + ", " + limite_sup + " )");
+                        //System.out.println(genero + "( " + limite_inf + ", " + limite_sup + " )");
+                    }
+                }
+                if (cant_cambios > max_cambio)
+                {
+                    minimo_global=rango.get_inferior();
+                    maximo_global=rango.get_superior();
+                    max_cambio = cant_cambios;
+                }
             }
-            
-            
         }
+        rango.set_inferior(minimo_global);
+        rango.set_superior(maximo_global);
         return rango;
     }
     
