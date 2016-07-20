@@ -65,7 +65,7 @@ public class Manager {
            JSONObject obj_clasif = new JSONObject(lista.get(i).toString());
            lista_clasif.add(obj_clasif.getString("classifier_id"));
        }
-       lista_clasif.add("default");
+       //lista_clasif.add("default");
         ClassifyImagesOptions options_cl = new ClassifyImagesOptions.Builder().images(new File(ruta)).classifierIds(lista_clasif).build();
         return (options_cl);
     }

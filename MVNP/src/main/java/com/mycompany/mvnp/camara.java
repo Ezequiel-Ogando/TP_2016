@@ -32,41 +32,52 @@ public class camara {
     private static Clasificador clasificador = new Clasificador();
     
     public static void main(String[] args) {
-        
-
-      Manager manejador = new Manager();
-      VisualRecognition service = manejador.crear_servicio();
       
       String ruta;
       if ( args.length > 0 )
         ruta = args[0];
       else
-    //      ruta = "/home/utnso/sport.jpg";
-          ruta = "/home/utnso/31.jpg";
-      
-      
-      System.out.println("Faces detection");
+          ruta = "/home/utnso/grupo.jpg";
+
+      Manager manejador = new Manager();
+      VisualRecognition service = manejador.crear_servicio();
       
       VisualRecognitionOptions options_face = manejador.crear_options_face(ruta);
-      
-      String caras_detectadas = manejador.consultar_caras(service, options_face);
-      
-      
-      System.out.println(caras_detectadas);
-      
-      char mayoria = clasificador.mayoria(caras_detectadas);
-       
-      Edad rango = clasificador.rango_edad(mayoria, caras_detectadas);
-      System.out.println("rango: " + rango.get_inferior() + "-" + rango.get_superior()); 
-       
       ClassifyImagesOptions options_clasif = manejador.crear_options_clasify(service, ruta);
+      
+      System.out.println("Faces detection");
+      String caras_detectadas = manejador.consultar_caras(service, options_face);
+      System.out.println(caras_detectadas);
+      char mayoria = clasificador.mayoria(caras_detectadas);
+      //Si mayoria es N entonces no se detectaron personas o hubo un error interno en el servicio
+      if (mayoria != 'N')
+      {       
+        System.out.println("Mayoria: " + mayoria);
+        Edad rango = clasificador.rango_edad2(mayoria, caras_detectadas);
+        System.out.println("rango: " + rango.get_inferior() + "-" + rango.get_superior()); 
        
-      String clasificaciones = manejador.clasificar(service, options_clasif);
+        String clasificaciones = manejador.clasificar(service, options_clasif);
        
-      System.out.println("Resultado de clasificacion: ");
-      System.out.println(clasificaciones);
+        System.out.println("Resultado de clasificacion: ");
+        System.out.println(clasificaciones);
+        
+        mostrar_marcas(clasificaciones);
+        
+      }
               
       
+    }
+    
+    private static void mostrar_marcas(String clasificaciones)
+    {
+        List<Marca> marcas = clasificador.listar_marcas(clasificaciones);
+        if (!marcas.isEmpty())
+        {
+            for(int i=0; i< marcas.size(); i++)
+            {
+                System.out.println("id: " + marcas.get(i).get_id() + ", nombre: " + marcas.get(i).get_nombre());
+            }
+        }
     }
     
 }
