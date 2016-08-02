@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31/07/2016 18:38:39 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="cl.model.pojos.Publicidad" table="publicidad" catalog="db_sm" optimistic-lock="version">
+        <id name="pubId" type="java.lang.Integer">
+            <column name="pub_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="marca" class="cl.model.pojos.Marca" fetch="select">
+            <column name="marca_id" not-null="true" />
+        </many-to-one>
+        <property name="sexo" type="char">
+            <column name="sexo" length="1" not-null="true" />
+        </property>
+        <property name="edadMin" type="byte">
+            <column name="edad_min" not-null="true" />
+        </property>
+        <property name="edadMax" type="byte">
+            <column name="edad_max" not-null="true" />
+        </property>
+        <property name="horarioMin" type="byte">
+            <column name="horario_min" not-null="true" />
+        </property>
+        <property name="horarioMax" type="byte">
+            <column name="horario_max" not-null="true" />
+        </property>
+        <property name="imagen" type="binary">
+            <column name="imagen" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

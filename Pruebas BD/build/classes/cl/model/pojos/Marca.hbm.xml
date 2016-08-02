@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31/07/2016 18:38:39 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="cl.model.pojos.Marca" table="marca" catalog="db_sm" optimistic-lock="version">
+        <id name="marcaId" type="java.lang.Integer">
+            <column name="marca_id" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="40" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="50" not-null="true" />
+        </property>
+        <set name="publicidads" table="publicidad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="marca_id" not-null="true" />
+            </key>
+            <one-to-many class="cl.model.pojos.Publicidad" />
+        </set>
+    </class>
+</hibernate-mapping>
